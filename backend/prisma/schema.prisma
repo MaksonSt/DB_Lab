@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model club {
+  name    String  @id @db.VarChar(100)
+  city    String  @db.VarChar(100)
+  stadium String? @db.VarChar(100)
+  sponsor String? @db.VarChar(100)
+  team    team[]
+}
+
+model coach {
+  id             Int              @id @default(autoincrement())
+  person_id      Int
+  coach_type     String?          @db.VarChar(50)
+  head_coach_id  Int?
+  experience     Int?
+  coach          coach?           @relation("coachTocoach", fields: [head_coach_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_coach    coach[]          @relation("coachTocoach")
+  person         person           @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  training_coach training_coach[]
+}
+
+model match {
+  id                            Int           @id @default(autoincrement())
+  date                          DateTime      @db.Date
+  time                          DateTime      @db.Time(6)
+  stadium                       String        @db.VarChar(100)
+  home_team_id                  Int
+  away_team_id                  Int
+  goals                         Int?          @default(0)
+  team_match_away_team_idToteam team          @relation("match_away_team_idToteam", fields: [away_team_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  team_match_home_team_idToteam team          @relation("match_home_team_idToteam", fields: [home_team_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  match_stats                   match_stats[]
+}
+
+model match_stats {
+  match_id       Int
+  player_id      Int
+  goals          Int?   @default(0)
+  assists        Int?   @default(0)
+  cards          Int?   @default(0)
+  minutes_played Int?   @default(0)
+  match          match  @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  player         player @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([match_id, player_id])
+}
+
+model medical_card {
+  id         Int     @id @default(autoincrement())
+  player_id  Int     @unique
+  blood_type String? @db.VarChar(5)
+  allergies  String?
+  player     player  @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model person {
+  id          Int      @id @default(autoincrement())
+  first_name  String   @db.VarChar(50)
+  last_name   String   @db.VarChar(50)
+  nationality String?  @db.VarChar(50)
+  coach       coach[]
+  player      player[]
+}
+
+model player {
+  id            Int           @id @default(autoincrement())
+  person_id     Int
+  jersey_number Int?
+  position_id   Int?
+  team_id       Int?
+  match_stats   match_stats[]
+  medical_card  medical_card?
+  person        person        @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  position      position?     @relation(fields: [position_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  team          team?         @relation(fields: [team_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model position {
+  id     Int      @id @default(autoincrement())
+  name   String   @db.VarChar(50)
+  player player[]
+}
+
+model team {
+  id                             Int        @id @default(autoincrement())
+  name                           String     @db.VarChar(100)
+  age_category                   String?    @db.VarChar(50)
+  club_name                      String?    @db.VarChar(100)
+  match_match_away_team_idToteam match[]    @relation("match_away_team_idToteam")
+  match_match_home_team_idToteam match[]    @relation("match_home_team_idToteam")
+  player                         player[]
+  club                           club?      @relation(fields: [club_name], references: [name], onDelete: NoAction, onUpdate: NoAction)
+  training                       training[]
+}
+
+model training {
+  id             Int              @id @default(autoincrement())
+  date           DateTime         @db.Date
+  time           DateTime         @db.Time(6)
+  duration       Int?
+  type           String?          @db.VarChar(50)
+  team_id        Int?
+  team           team?            @relation(fields: [team_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  training_coach training_coach[]
+}
+
+model training_coach {
+  training_id Int
+  coach_id    Int
+  coach       coach    @relation(fields: [coach_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  training    training @relation(fields: [training_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([training_id, coach_id])
+}
