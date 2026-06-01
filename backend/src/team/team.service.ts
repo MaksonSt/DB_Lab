@@ -9,13 +9,21 @@ export class TeamService {
     return this.prisma.team.findMany({ include: { club: true } });
   }
   findOne(id: number) {
-    return this.prisma.team.findUnique({ where: { id }, include: { club: true } });
+    return this.prisma.team.findUnique({
+      where: { id },
+      include: { club: true },
+    });
   }
   create(data: { name: string; age_category?: string; club_name?: string }) {
     return this.prisma.team.create({ data });
   }
-  update(id: number, data: { name?: string; age_category?: string; club_name?: string }) {
+  update(
+    id: number,
+    data: { name?: string; age_category?: string; club_name?: string },
+  ) {
     return this.prisma.team.update({ where: { id }, data });
   }
-  remove(id: number) { return this.prisma.team.delete({ where: { id } }); }
+  remove(id: number) {
+    return this.prisma.team.delete({ where: { id } });
+  }
 }

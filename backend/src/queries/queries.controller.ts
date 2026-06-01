@@ -11,7 +11,10 @@ export class QueriesController {
   }
 
   @Get('2')
-  matchesByStadium(@Query('stadium') stadium: string, @Query('date') date: string) {
+  matchesByStadium(
+    @Query('stadium') stadium: string,
+    @Query('date') date: string,
+  ) {
     return this.service.matchesByStadiumAfterDate(stadium, date);
   }
 
@@ -36,7 +39,10 @@ export class QueriesController {
   }
 
   @Get('7')
-  playersSameMatches(@Query('firstName') firstName: string, @Query('lastName') lastName: string) {
+  playersSameMatches(
+    @Query('firstName') firstName: string,
+    @Query('lastName') lastName: string,
+  ) {
     return this.service.playersSameMatchesAs(firstName, lastName);
   }
 }

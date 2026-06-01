@@ -14,6 +14,8 @@ export class TrainingCoachService {
     return this.prisma.training_coach.create({ data });
   }
   remove(training_id: number, coach_id: number) {
-    return this.prisma.training_coach.delete({ where: { training_id_coach_id: { training_id, coach_id } } });
+    return this.prisma.training_coach.delete({
+      where: { training_id_coach_id: { training_id, coach_id } },
+    });
   }
 }

@@ -5,7 +5,6 @@ import { PrismaService } from '../prisma/prisma.service';
 export class QueriesService {
   constructor(private prisma: PrismaService) {}
 
-  // 1. Гравці команди X що забили більше N голів
   async playersWithGoals(teamName: string, minGoals: number) {
     return this.prisma.$queryRaw`
       SELECT p.first_name || ' ' || p.last_name AS player, t.name AS team, SUM(ms.goals) AS total_goals
@@ -19,7 +18,6 @@ export class QueriesService {
     `;
   }
 
-  // 2. Матчі на стадіоні X після дати Y
   async matchesByStadiumAfterDate(stadium: string, afterDate: string) {
     return this.prisma.$queryRaw`
       SELECT m.date, m.time, m.stadium, ht.name AS home_team, at.name AS away_team, m.goals
@@ -30,7 +28,6 @@ export class QueriesService {
     `;
   }
 
-  // 3. Гравці з групою крові X
   async playersByBloodType(bloodType: string) {
     return this.prisma.$queryRaw`
       SELECT p.first_name || ' ' || p.last_name AS player, t.name AS team, mc.blood_type, mc.allergies
@@ -42,7 +39,6 @@ export class QueriesService {
     `;
   }
 
-  // 4. Тренери з досвідом більше N років
   async coachesByExperience(minExperience: number) {
     return this.prisma.$queryRaw`
       SELECT p.first_name || ' ' || p.last_name AS coach, c.coach_type, c.experience
@@ -53,7 +49,6 @@ export class QueriesService {
     `;
   }
 
-  // 5. Гравці що отримали картки після дати Y
   async playersWithCardsAfterDate(afterDate: string) {
     return this.prisma.$queryRaw`
       SELECT p.first_name || ' ' || p.last_name AS player, t.name AS team, SUM(ms.cards) AS total_cards
@@ -68,7 +63,6 @@ export class QueriesService {
     `;
   }
 
-  // 6. Гравці що зіграли у всіх матчах своєї команди (NOT EXISTS)
   async playersInAllMatches(teamName: string) {
     return this.prisma.$queryRaw`
       SELECT p.first_name || ' ' || p.last_name AS player, t.name AS team
@@ -86,7 +80,6 @@ export class QueriesService {
     `;
   }
 
-  // 7. Гравці що зіграли у тих самих матчах що і гравець X (EXCEPT + NOT EXISTS)
   async playersSameMatchesAs(firstName: string, lastName: string) {
     return this.prisma.$queryRaw`
       SELECT DISTINCT p.first_name || ' ' || p.last_name AS player, t.name AS team

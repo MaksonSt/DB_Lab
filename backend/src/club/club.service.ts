@@ -10,14 +10,25 @@ export class ClubService {
   }
 
   findOne(name: string) {
-    return this.prisma.club.findUnique({ where: { name }, include: { team: true } });
+    return this.prisma.club.findUnique({
+      where: { name },
+      include: { team: true },
+    });
   }
 
-  create(data: { name: string; city: string; stadium?: string; sponsor?: string }) {
+  create(data: {
+    name: string;
+    city: string;
+    stadium?: string;
+    sponsor?: string;
+  }) {
     return this.prisma.club.create({ data });
   }
 
-  update(name: string, data: { city?: string; stadium?: string; sponsor?: string }) {
+  update(
+    name: string,
+    data: { city?: string; stadium?: string; sponsor?: string },
+  ) {
     return this.prisma.club.update({ where: { name }, data });
   }
 

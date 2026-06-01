@@ -11,15 +11,38 @@ export class MatchStatsService {
     });
   }
   findOne(match_id: number, player_id: number) {
-    return this.prisma.match_stats.findUnique({ where: { match_id_player_id: { match_id, player_id } } });
+    return this.prisma.match_stats.findUnique({
+      where: { match_id_player_id: { match_id, player_id } },
+    });
   }
-  create(data: { match_id: number; player_id: number; goals?: number; assists?: number; cards?: number; minutes_played?: number }) {
+  create(data: {
+    match_id: number;
+    player_id: number;
+    goals?: number;
+    assists?: number;
+    cards?: number;
+    minutes_played?: number;
+  }) {
     return this.prisma.match_stats.create({ data });
   }
-  update(match_id: number, player_id: number, data: { goals?: number; assists?: number; cards?: number; minutes_played?: number }) {
-    return this.prisma.match_stats.update({ where: { match_id_player_id: { match_id, player_id } }, data });
+  update(
+    match_id: number,
+    player_id: number,
+    data: {
+      goals?: number;
+      assists?: number;
+      cards?: number;
+      minutes_played?: number;
+    },
+  ) {
+    return this.prisma.match_stats.update({
+      where: { match_id_player_id: { match_id, player_id } },
+      data,
+    });
   }
   remove(match_id: number, player_id: number) {
-    return this.prisma.match_stats.delete({ where: { match_id_player_id: { match_id, player_id } } });
+    return this.prisma.match_stats.delete({
+      where: { match_id_player_id: { match_id, player_id } },
+    });
   }
 }
